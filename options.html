@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>搜索结果过滤器 · 设置</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #18181b;
+    --muted: #71717a;
+    --line: #e4e4e7;
+    --accent: #2563eb;
+    --accent-fg: #ffffff;
+    --chip: #f4f4f5;
+    --danger: #dc2626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #18181b;
+      --fg: #f4f4f5;
+      --muted: #a1a1aa;
+      --line: #3f3f46;
+      --accent: #3b82f6;
+      --chip: #27272a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 24px 64px;
+    background: var(--bg); color: var(--fg);
+    font: 14px/1.7 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 6px; letter-spacing: -.2px; }
+  .sub { color: var(--muted); font-size: 13px; margin-bottom: 32px; }
+  section {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 20px 22px; margin-bottom: 18px;
+  }
+  h2 { font-size: 14px; margin: 0 0 4px; font-weight: 600; }
+  .hint { color: var(--muted); font-size: 12.5px; margin: 0 0 14px; }
+  textarea {
+    width: 100%; min-height: 168px; resize: vertical;
+    padding: 12px 14px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--chip); color: var(--fg);
+    font: 13px/1.8 ui-monospace, "Cascadia Code", Consolas, monospace;
+    outline: none;
+  }
+  textarea:focus { border-color: var(--accent); }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .row + .row { margin-top: 12px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  button {
+    font: inherit; font-size: 13px; cursor: pointer;
+    border-radius: 8px; border: 1px solid var(--line);
+    background: var(--chip); color: var(--fg);
+    padding: 6px 12px; transition: .15s;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button.primary {
+    background: var(--accent); border-color: var(--accent);
+    color: var(--accent-fg); padding: 9px 22px; font-weight: 500;
+  }
+  button.primary:hover { filter: brightness(1.08); color: var(--accent-fg); }
+  label.switch { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; }
+  input[type=checkbox] { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
+  .count-line { color: var(--muted); font-size: 12.5px; }
+  #status {
+    display: inline-block; margin-left: 12px; font-size: 13px;
+    color: var(--muted); transition: opacity .2s; opacity: 0;
+  }
+  #status.show { opacity: 1; }
+  .rules { font-size: 12.5px; color: var(--muted); }
+  .rules code {
+    background: var(--chip); padding: 1px 5px; border-radius: 4px;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>搜索结果过滤器</h1>
+  <p class="sub">在搜索结果页中隐藏来自指定站点的条目。改动即时生效，无需重启浏览器。</p>
+
+  <section>
+    <h2>屏蔽规则</h2>
+    <p class="hint">一行一个域名。填 <code>csdn.net</code> 会同时命中 <code>blog.csdn.net</code>、<code>bbs.csdn.net</code> 等所有子域；不要把 <code>www.</code> 写进去。</p>
+    <textarea id="domains" spellcheck="false" placeholder="csdn.net"></textarea>
+    <div class="presets" id="presets"></div>
+    <div class="count-line" id="count" style="margin-top:12px"></div>
+  </section>
+
+  <section>
+    <h2>显示</h2>
+    <p class="hint">右下角显示本次搜索已屏蔽的条数。</p>
+    <label class="switch">
+      <input type="checkbox" id="showCounter">
+      <span>显示屏蔽计数</span>
+    </label>
+  </section>
+
+  <section>
+    <h2>总开关</h2>
+    <p class="hint">关闭后所有页面都不再过滤，已隐藏的结果会自动恢复。</p>
+    <label class="switch">
+      <input type="checkbox" id="enabled">
+      <span>启用过滤</span>
+    </label>
+  </section>
+
+  <section>
+    <h2>工作原理</h2>
+    <p class="rules">
+      插件在每个搜索结果页里逐条检查结果的来源：读百度结果容器上的 <code>mu</code> 属性、
+      链接的真实地址（含 Google <code>/url?q=</code> 这类中转解析）、以及 <code>cite</code> 里显示的域名。
+      命中黑名单就把整条结果隐藏。<br><br>
+      定位结果条目时优先用各引擎既有的容器（Bing <code>li.b_algo</code>、百度 <code>div.result</code>、
+      Google <code>div.g</code>、夸克 <code>section.sc_*</code>），失效时退回「同构兄弟节点」的通用启发式，
+      所以引擎改版通常不会直接失效。所有候选都要过体检，避免误伤摘要卡和侧栏。<br><br>
+      支持：夸克、Edge、Chrome、百度、Bing、Google、搜狗、360、DuckDuckGo。只在结果页运行，不读取、不上传任何数据。
+    </p>
+  </section>
+
+  <div class="row">
+    <button class="primary" id="save">保存</button>
+    <span id="status">已保存</span>
+  </div>
+</div>
+<script src="options.js"></script>
+</body>
+</html>

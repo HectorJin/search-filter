@@ -1,0 +1,66 @@
+name: Bug report
+description: A result that should have been hidden was not, or something broke.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Most filtering bugs come down to a container selector
+        that no longer matches after an engine redesign — the DOM dump below is what
+        makes these fixable.
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      description: From `chrome://version`, `edge://version`, or `quark://version`.
+      placeholder: e.g. Edge 152.0.4191.66
+    validations:
+      required: true
+
+  - type: input
+    id: engine
+    attributes:
+      label: Search engine and query
+      placeholder: e.g. Baidu — "spring boot 事务失效"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What happened
+      description: Which result survived that should have been hidden? Was anything hidden by mistake?
+    validations:
+      required: true
+
+  - type: textarea
+    id: dom
+    attributes:
+      label: Result element HTML
+      description: |
+        In DevTools, right-click the result that should have been hidden →
+        Copy → Copy outerHTML. Trim it to the container element so it stays readable.
+      render: html
+    validations:
+      required: false
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors
+      description: Anything red in the results page console.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: The engine is listed in the README support table
+          required: true
+        - label: I reloaded the page after installing or updating the extension
+          required: true

@@ -1,0 +1,53 @@
+name: Engine support request
+description: Ask for a search engine that isn't supported yet, or volunteer a PR.
+title: "[Engine] "
+labels: ["engine-support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Adding an engine needs two selectors: the results list container, and the
+        per-result container. If you can supply both, this is usually a ten-line patch.
+
+  - type: input
+    id: engine
+    attributes:
+      label: Engine name and search URL
+      placeholder: e.g. Yandex — https://yandex.com/search/?text=...
+    validations:
+      required: true
+
+  - type: textarea
+    id: containers
+    attributes:
+      label: Selectors
+      description: |
+        - **Results list**: the element wrapping all results (goes into `SCOPE_SELECTORS`)
+        - **One result**: the element wrapping exactly one entry (goes into `ITEM_SELECTORS`)
+      placeholder: |
+        results list: #search-result
+        one result:   li.serp-item
+    validations:
+      required: false
+
+  - type: dropdown
+    id: tunnel
+    attributes:
+      label: Does the engine rewrite result links?
+      description: |
+        If clicking a result goes through a redirect domain (e.g. `example.com/link?url=...`),
+        the real target is hidden and the extension needs to parse the tunnel parameter.
+      options:
+        - "No — links point straight at the target"
+        - "Yes — links go through a redirect"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: offer
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm willing to open a PR for this
+          required: false

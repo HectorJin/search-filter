@@ -1,0 +1,16 @@
+# Normalise line endings so the repo stays consistent across platforms
+* text=auto eol=lf
+
+# Source
+*.js    text
+*.html  text
+*.json  text
+*.md    text
+*.yml   text
+*.py    text
+
+# Binary
+*.png   binary
+*.jpg   binary
+*.zip   binary
+*.crx   binary

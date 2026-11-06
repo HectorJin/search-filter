@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #18181b; --muted: #71717a;
+    --line: #e4e4e7; --accent: #2563eb; --chip: #f4f4f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #18181b; --fg: #f4f4f5; --muted: #a1a1aa; --line: #3f3f46; --chip: #27272a; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; width: 288px; padding: 16px;
+    background: var(--bg); color: var(--fg);
+    font: 13px/1.6 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  }
+  .head { display: flex; align-items: center; justify-content: space-between; }
+  .title { font-size: 14px; font-weight: 600; }
+  .big { font-size: 30px; font-weight: 600; letter-spacing: -.5px; margin: 14px 0 2px; }
+  .big small { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 5px; }
+  .state { color: var(--muted); font-size: 12px; }
+  .divider { height: 1px; background: var(--line); margin: 14px 0; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .domains { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    background: var(--chip); border-radius: 6px; padding: 2px 8px;
+    font-size: 12px; font-family: ui-monospace, Consolas, monospace;
+  }
+  button {
+    font: inherit; font-size: 12.5px; cursor: pointer; width: 100%;
+    border-radius: 8px; border: 1px solid var(--line);
+    background: var(--chip); color: var(--fg); padding: 8px; margin-top: 12px;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  label.sw { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; font-size: 12.5px; }
+  input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <span class="title">搜索结果过滤器</span>
+    <label class="sw"><input type="checkbox" id="enabled"><span>启用</span></label>
+  </div>
+
+  <div class="big"><span id="count">—</span><small>条已屏蔽</small></div>
+  <div class="state" id="state">正在读取当前页面…</div>
+
+  <div class="divider"></div>
+
+  <div class="row"><span class="state">黑名单</span><span class="state" id="num">0 个域名</span></div>
+  <div class="domains" id="domains"></div>
+
+  <button id="opts">管理黑名单</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

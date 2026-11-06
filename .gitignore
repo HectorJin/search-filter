@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+*.zip
+*.crx
+*.pem
+dist/
+
+# Node (only if you add a build step)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Local scratch
+*.log
+tmp/
